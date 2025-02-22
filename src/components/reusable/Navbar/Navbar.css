@@ -1,0 +1,15 @@
+.nav-item {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 21.09px;
+  color: #ffffff !important;
+  padding: 2px 0;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all 300ms linear;
+}
+
+.nav-item:hover {
+  color: #ffffff !important;
+  border-bottom: 2px solid #ffffff;
+}
