@@ -3,3 +3,16 @@
   margin: 0;
   padding: 0;
 }
+
+.section-card {
+  background-color: #ffffff;
+  border: 1px solid #dce0e4;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.table-searchbar::-webkit-search-cancel-button {
+  position: relative;
+  right: 10px;
+  cursor: pointer;
+}
