@@ -6,7 +6,7 @@ function Navbar() {
   return (
     <div className="bg-[#43BFC7]">
       <div className="min-h-[60px] flex justify-between items-center w-full gap-x-[40px] container">
-        <div className="flex gap-x-[28px] w-full">
+        <div className="flex gap-x-[28px]">
           <Link to="/" className="nav-item">
             Home
           </Link>

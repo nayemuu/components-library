@@ -14,3 +14,21 @@
     background-color: white;
   }
 }
+
+/* modal */
+.custom-backdrop-active {
+  display: block;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  background-color: hsla(0, 0%, 0%, 0.4);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 8;
+}
+
+.custom-backdrop-inactive {
+  display: none;
+}
