@@ -4,7 +4,7 @@ export let topics = [
     path: "/debounce",
   },
   {
-    title: "Observer",
-    path: "/observer",
+    title: "Intersection Observer",
+    path: "/intersection-observer",
   },
 ];
