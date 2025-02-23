@@ -1,9 +1,19 @@
 import { Icon } from "@iconify/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { topics } from "../../../../data/data";
+import "./SearchBar.css";
+import SearchResultItem from "./SearchResult/SearchResultItem";
 
 const SearchBar = () => {
   const [searchText, setSearchText] = useState("");
+  const [suggestionSelect, setSuggestionSelect] = useState(null);
+  const [childOffsets, setChildOffsets] = useState([]);
   const inputRef = useRef(null); // Create a ref for the input field
+  const containerRef = useRef(null);
+
+  // useEffect(() => {
+  //   console.log("suggestionSelect = ", suggestionSelect);
+  // }, [suggestionSelect]);
 
   const doSearch = (event) => {
     setSearchText(event.target.value);
@@ -29,6 +39,86 @@ const SearchBar = () => {
     }
   };
 
+  let searchResults = topics.filter((topic) => {
+    if (searchText.length) {
+      if (topic.title.toLowerCase().includes(searchText.toLowerCase())) {
+        return true;
+      }
+
+      return false;
+    } else {
+      return false;
+    }
+  });
+
+  // console.log("searchResults = ", searchResults);
+
+  useEffect(() => {
+    if (
+      searchText !== "" &&
+      containerRef.current?.children &&
+      searchResults.length !== 0
+    ) {
+      // console.log("containerRef = ", containerRef.current);
+      if (containerRef.current) {
+        const childDivs = Array.from(containerRef.current.children);
+        // console.log('childDivs = ', childDivs);
+        const offsets = childDivs.map((child) => child.offsetTop);
+        // console.log("offsets", offsets);
+        setChildOffsets(offsets);
+      }
+    }
+  }, [containerRef, searchText]);
+
+  const searchInputSuggestionHandler = (e) => {
+    if (
+      searchText !== "" &&
+      searchResults.length !== 0 &&
+      containerRef.current
+    ) {
+      if (e.key === "ArrowUp") {
+        if (suggestionSelect > 0) {
+          setSuggestionSelect((previousState) => previousState - 1);
+
+          containerRef.current.scrollTo({
+            top: childOffsets[suggestionSelect - 1],
+            behavior: "smooth",
+          });
+        }
+      } else {
+        containerRef.current.scrollTo({
+          top: childOffsets[0],
+          behavior: "smooth",
+        });
+      }
+      if (e.key === "ArrowDown") {
+        console.log("suggestionSelect = ", suggestionSelect);
+        console.log("searchResults.length = ", searchResults?.length);
+
+        if (suggestionSelect || suggestionSelect === 0) {
+          if (suggestionSelect < searchResults?.length - 2) {
+            setSuggestionSelect((previousState) => previousState + 1);
+            containerRef.current.scrollTo({
+              top: childOffsets[suggestionSelect],
+              behavior: "smooth",
+            });
+
+            console.log("yoo");
+          }
+        } else if (suggestionSelect === null) {
+          setSuggestionSelect(0);
+          if (childOffsets[0] && containerRef?.current) {
+            containerRef.current.scrollTo({
+              top: childOffsets[0],
+              behavior: "smooth",
+            });
+          }
+          console.log("else");
+        }
+      }
+    }
+  };
+
   return (
     <div className="h-[40px] w-full relative z-10">
       <form className="h-full" onSubmit={() => {}}>
@@ -38,6 +128,7 @@ const SearchBar = () => {
           onChange={handleSearch}
           className="w-full h-full outline-none rounded-[20px] border border-solid border-transparent pl-[20px] pr-[63px] bg-[#ffffff4d] text-white placeholder:text-white"
           ref={inputRef}
+          onKeyDown={(e) => searchInputSuggestionHandler(e)}
         />
       </form>
 
@@ -58,6 +149,43 @@ const SearchBar = () => {
               clearInputField();
             }}
           />
+        </div>
+      ) : (
+        <></>
+      )}
+
+      {searchText.length ? (
+        <div className="absolute z-1 top-[36px] sm:top-[45px] md:top-[50px] right-0 bg-gray-100 w-full  rounded-[10px]">
+          <div className="p-[5px]">
+            <div
+              className={`grid gap-y-[5px] overflow-y-auto search-item-scroll ${
+                searchResults.length ? "max-h-[250px]" : "h-[30px]"
+              }`}
+              style={{ overflowX: "hidden", position: "relative" }}
+              ref={containerRef}
+            >
+              {searchResults.length ? (
+                searchResults.map((topic, index) => (
+                  <SearchResultItem
+                    key={index}
+                    index={index}
+                    topic={topic}
+                    suggestionSelect={suggestionSelect}
+                  />
+                ))
+              ) : (
+                <></>
+              )}
+
+              {!searchResults.length ? (
+                <div className="flex justify-center items-center text-xs sm:text-sm">
+                  No Result Found
+                </div>
+              ) : (
+                <></>
+              )}
+            </div>
+          </div>
         </div>
       ) : (
         <></>

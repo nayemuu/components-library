@@ -65,6 +65,7 @@ export default function Home() {
                     backgroundColor: index % 2 === 0 ? "#f5f5f5" : "#ffffff",
                   }}
                   className="py-2 px-1 border-b border-solid border-[#d6d6d6] item"
+                  key={index}
                 >
                   <Link
                     to={topic.path}
